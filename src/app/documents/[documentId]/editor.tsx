@@ -18,7 +18,8 @@ import { Color } from '@tiptap/extension-color';
 import HighLight from '@tiptap/extension-highlight';
 import Link from '@tiptap/extension-link';
 import { useEditorStore } from "@/store/use-editor-store";
-
+import { FontSizeExtension } from "@/extensions/font-size";
+import { LineHeightExtension } from "@/extensions/line-height";
 
 const Editor = () => {
   const { setEditor } = useEditorStore();
@@ -56,6 +57,11 @@ const Editor = () => {
     },
     extensions: [
       StarterKit,
+      FontSizeExtension,
+      LineHeightExtension.configure({
+        types: ['heading', 'paragraph'],
+        defaultLineHeight: "normal",
+      }),
       Image,
       ImageResize,
       TaskList,
