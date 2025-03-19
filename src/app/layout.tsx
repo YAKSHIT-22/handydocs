@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Urbanist } from "next/font/google"
-import { NuqsAdapter } from "nuqs/adapters/next/app"
+import { Urbanist } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./globals.css";
+import { ConvexClientProvider } from "@/components/convex_client_provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 const urbanist = Urbanist({
   subsets: ["latin"],
   display: "swap",
-})
+});
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -19,11 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={urbanist.className}
-      >
+      <body className={urbanist.className}>
         <NuqsAdapter>
-        {children}
+          <ConvexClientProvider>{children}</ConvexClientProvider>
         </NuqsAdapter>
       </body>
     </html>
