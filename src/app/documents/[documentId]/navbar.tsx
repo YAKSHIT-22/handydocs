@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 import { BsFilePdf } from "react-icons/bs";
 import { useEditorStore } from "@/store/use-editor-store";
+import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 const Navbar = () => {
   const { editor }  = useEditorStore();
   const insertTable = ({rows, cols}: {rows: number, cols: number}) => {
@@ -214,6 +215,15 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      <div className='flex items-center gap-3'>
+          <OrganizationSwitcher
+          afterCreateOrganizationUrl="/"
+          afterLeaveOrganizationUrl='/'
+          afterSelectOrganizationUrl='/'
+          afterSelectPersonalUrl="/"
+          />
+        <UserButton/>
+        </div>
     </nav>
   );
 };

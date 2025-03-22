@@ -46,7 +46,7 @@ export const DocumentMenu = ({
             Trash
           </DropdownMenuItem>
         </RemoveDialog>
-        <DropdownMenuItem onClick={() => onNewTab(documentId)}>
+        <DropdownMenuItem onClick={(e) => {e.stopPropagation(); onNewTab(documentId)}}>
           <ExternalLinkIcon className="size-4 mr-2" />
           Open in new tab
         </DropdownMenuItem>
