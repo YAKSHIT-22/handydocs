@@ -37,6 +37,7 @@ import {
 import { BsFilePdf } from "react-icons/bs";
 import { useEditorStore } from "@/store/use-editor-store";
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
+import { Avatars } from "./avatars";
 const Navbar = () => {
   const { editor }  = useEditorStore();
   const insertTable = ({rows, cols}: {rows: number, cols: number}) => {
@@ -216,6 +217,7 @@ const Navbar = () => {
         </div>
       </div>
       <div className='flex items-center gap-3'>
+        <Avatars/>
           <OrganizationSwitcher
           afterCreateOrganizationUrl="/"
           afterLeaveOrganizationUrl='/'

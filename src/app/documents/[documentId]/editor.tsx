@@ -8,29 +8,34 @@ import Table from "@tiptap/extension-table";
 import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
-import Image from '@tiptap/extension-image'
+import Image from "@tiptap/extension-image";
 import ImageResize from "tiptap-extension-resize-image";
-import Underline from '@tiptap/extension-underline';
-import TextAlign from '@tiptap/extension-text-align';
-import TextStyle from '@tiptap/extension-text-style';
-import FontFamily from '@tiptap/extension-font-family';
-import { Color } from '@tiptap/extension-color';
-import HighLight from '@tiptap/extension-highlight';
-import Link from '@tiptap/extension-link';
+import Underline from "@tiptap/extension-underline";
+import TextAlign from "@tiptap/extension-text-align";
+import TextStyle from "@tiptap/extension-text-style";
+import FontFamily from "@tiptap/extension-font-family";
+import { Color } from "@tiptap/extension-color";
+import HighLight from "@tiptap/extension-highlight";
+import Link from "@tiptap/extension-link";
 import { useEditorStore } from "@/store/use-editor-store";
 import { FontSizeExtension } from "@/extensions/font-size";
 import { LineHeightExtension } from "@/extensions/line-height";
+import {
+  useLiveblocksExtension,
+} from "@liveblocks/react-tiptap";
 import Ruler from "./ruler";
+import { Threads } from "./threads";
 
 const Editor = () => {
+  const liveblocks = useLiveblocksExtension();
   const { setEditor } = useEditorStore();
   const editor = useEditor({
     immediatelyRender: false,
     onCreate: ({ editor }) => {
       setEditor(editor);
     },
-    onDestroy: () =>{
-      setEditor(null)
+    onDestroy: () => {
+      setEditor(null);
     },
     onUpdate: ({ editor }) => {
       setEditor(editor);
@@ -58,10 +63,13 @@ const Editor = () => {
       },
     },
     extensions: [
-      StarterKit,
+      liveblocks,
+      StarterKit.configure({
+        history: false,
+      }),
       FontSizeExtension,
       LineHeightExtension.configure({
-        types: ['heading', 'paragraph'],
+        types: ["heading", "paragraph"],
         defaultLineHeight: "normal",
       }),
       Image,
@@ -80,7 +88,7 @@ const Editor = () => {
       FontFamily,
       TextStyle,
       TextAlign.configure({
-        types: ['heading', 'paragraph']
+        types: ["heading", "paragraph"],
       }),
       Color,
       HighLight.configure({
@@ -89,15 +97,16 @@ const Editor = () => {
       Link.configure({
         openOnClick: false,
         autolink: true,
-        defaultProtocol: "https"
+        defaultProtocol: "https",
       }),
     ],
   });
   return (
     <div className="size-full overflow-auto bg-[#f9fbfd] print:p-0 print:bg-white print:overflow-visible pt-1">
-      <Ruler/>
+      <Ruler />
       <div className="min-w-max flex justify-center w-[816px] py-4 px-4 print:py-0 mx-auto print:w-full print:min-w-0">
         <EditorContent editor={editor} />
+        <Threads editor={editor} />
       </div>
     </div>
   );
