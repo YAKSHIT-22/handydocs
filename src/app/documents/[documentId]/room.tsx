@@ -9,7 +9,8 @@ import {
 import { useParams } from "next/navigation";
 import { FullScreenLoader } from "@/components/fullscreen_loader";
 import { toast } from "sonner";
-import { getUsers } from "./actions";
+import { getDocuments, getUsers } from "./actions";
+import { Id } from "../../../../convex/_generated/dataModel";
 
 type User = { id: string; name: string; avatar: string };
 export function Room({ children }: { children: ReactNode }) {
@@ -32,7 +33,19 @@ export function Room({ children }: { children: ReactNode }) {
   return (
     <LiveblocksProvider
       throttle={16}
-      authEndpoint={"/api/liveblocks-auth"}
+      authEndpoint={async()=>{
+        const response = await fetch("/api/liveblocks-auth", {
+          method: "POST",
+          body: JSON.stringify({ room: params.documentId }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to authenticate");
+        }
+        return await response.json();
+      }}
       resolveMentionSuggestions={({text}) => {
         let filteredUsers = users;
         if(text){
@@ -42,12 +55,18 @@ export function Room({ children }: { children: ReactNode }) {
         }
         return filteredUsers.map((user) => user.id);
       }}
-      resolveRoomsInfo={() => []}
+      resolveRoomsInfo={async ({roomIds}) => {
+        const documents = await getDocuments(roomIds as Id<"documents">[]);
+        return documents.map((document) => ({
+          id: document.id,
+          name: document.name,
+        }));
+      }}
       resolveUsers={({userIds}) => {
         return userIds.map((userId) => users.find((user) => user.id === userId) ?? undefined);
       }}
     >
-      <RoomProvider id={params.documentId as string}>
+      <RoomProvider id={params.documentId as string} initialStorage={{ leftMargin: 56, rightMargin: 56}}>
         <ClientSideSuspense
           fallback={<FullScreenLoader label="Room Loading...." />}
         >
