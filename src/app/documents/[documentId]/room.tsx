@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { getDocuments, getUsers } from "./actions";
 import { Id } from "../../../../convex/_generated/dataModel";
 
-type User = { id: string; name: string; avatar: string };
+type User = { id: string; name: string; avatar: string; color: string };
 export function Room({ children }: { children: ReactNode }) {
   const params = useParams();
   const [users, setUsers] = useState<User[]>([]);
@@ -46,6 +46,11 @@ export function Room({ children }: { children: ReactNode }) {
         }
         return await response.json();
       }}
+      resolveUsers={({userIds})=>{
+        return userIds.map(
+          (userId)=>users.find((user)=>user.id === userId ) ?? undefined
+        )
+      }}
       resolveMentionSuggestions={({text}) => {
         let filteredUsers = users;
         if(text){
@@ -61,9 +66,6 @@ export function Room({ children }: { children: ReactNode }) {
           id: document.id,
           name: document.name,
         }));
-      }}
-      resolveUsers={({userIds}) => {
-        return userIds.map((userId) => users.find((user) => user.id === userId) ?? undefined);
       }}
     >
       <RoomProvider id={params.documentId as string} initialStorage={{ leftMargin: 56, rightMargin: 56}}>
